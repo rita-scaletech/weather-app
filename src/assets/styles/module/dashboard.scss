@@ -1,0 +1,78 @@
+.dashboard-wrapper {
+	.title {
+		text-shadow: 1px 1px 1px rgba($black, 0.4);
+	}
+
+	.city-component {
+		font-family: Montserrat;
+		display: flex;
+		flex-direction: column;
+		margin: auto;
+		align-items: center;
+		box-shadow: 0 3px 6px 0 #555;
+		padding: 20px 10px;
+		border-radius: 10px;
+		width: 380px;
+		background-color: white;
+		max-width: 500px;
+		margin: 50px auto 0;
+		.choose-city-label {
+			color: black;
+			font-size: 18px;
+			font-weight: bold;
+			margin: 10px auto;
+		}
+		.search-box {
+			display: flex;
+			flex-direction: row;
+			border: 1px solid black;
+			border-radius: 10px;
+			color: black;
+			font-size: 18px;
+			font-weight: bold;
+			margin: 20px auto;
+			box-shadow: 0px 1px 3px 0px #555;
+
+			input {
+				padding: 10px;
+				font-size: 14px;
+				border: none;
+				border-radius: 10px;
+				outline: none;
+				font-weight: bold;
+			}
+
+			.submit-btn {
+				padding: 10px;
+				font-size: 14px;
+				color: white;
+				background-color: black;
+				border: none;
+				border-radius: 10px;
+				outline: none;
+				font-weight: bold;
+				cursor: pointer;
+				box-shadow: 0px 1px 3px 0px #555;
+				transition: 1s;
+			}
+
+			.glyphicon {
+				position: relative;
+				top: 1px;
+				display: inline-block;
+				font-family: 'Glyphicons Halflings';
+				font-style: normal;
+				font-weight: 400;
+				line-height: 1;
+				-webkit-font-smoothing: antialiased;
+			}
+
+			.glyphicon-map-marker {
+				margin-top: 5px;
+				::before {
+					content: '\e062';
+				}
+			}
+		}
+	}
+}
