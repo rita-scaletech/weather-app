@@ -1,78 +1,236 @@
 .dashboard-wrapper {
+	position: relative;
+	z-index: 1;
 	.title {
 		text-shadow: 1px 1px 1px rgba($black, 0.4);
 	}
 
 	.city-component {
-		font-family: Montserrat;
-		display: flex;
-		flex-direction: column;
-		margin: auto;
-		align-items: center;
 		box-shadow: 0 3px 6px 0 #555;
 		padding: 20px 10px;
-		border-radius: 10px;
 		width: 380px;
-		background-color: white;
 		max-width: 500px;
 		margin: 50px auto 0;
 		.choose-city-label {
-			color: black;
-			font-size: 18px;
-			font-weight: bold;
 			margin: 10px auto;
 		}
 		.search-box {
-			display: flex;
-			flex-direction: row;
 			border: 1px solid black;
-			border-radius: 10px;
-			color: black;
-			font-size: 18px;
-			font-weight: bold;
 			margin: 20px auto;
 			box-shadow: 0px 1px 3px 0px #555;
 
 			input {
 				padding: 10px;
-				font-size: 14px;
-				border: none;
-				border-radius: 10px;
-				outline: none;
-				font-weight: bold;
 			}
 
 			.submit-btn {
-				padding: 10px;
-				font-size: 14px;
-				color: white;
-				background-color: black;
-				border: none;
-				border-radius: 10px;
-				outline: none;
-				font-weight: bold;
-				cursor: pointer;
+				padding: 12px;
 				box-shadow: 0px 1px 3px 0px #555;
 				transition: 1s;
 			}
+		}
+	}
 
-			.glyphicon {
-				position: relative;
-				top: 1px;
-				display: inline-block;
-				font-family: 'Glyphicons Halflings';
-				font-style: normal;
-				font-weight: 400;
-				line-height: 1;
-				-webkit-font-smoothing: antialiased;
+	.weather-info {
+		box-shadow: 0 3px 6px 0 #555;
+		padding: 20px 10px;
+		width: 600px;
+		margin: 50px auto 0;
+		.weatherCondition {
+			width: calc(100% - 50px);
+			margin: 0 auto;
+			.info-title {
+				font-weight: $font-medium;
+				font-size: $font-size-lg;
+				line-height: 20px;
+			}
+			.info-label {
+				color: #53627c;
 			}
 
-			.glyphicon-map-marker {
-				margin-top: 5px;
-				::before {
-					content: '\e062';
-				}
+			.small-img {
+				width: 20px;
+				height: 20px;
+				margin-right: 5px;
 			}
 		}
 	}
 }
+
+//------------------------------
+
+// .tvscreen {
+// 	display: block;
+// 	position: relative;
+// 	width: 100%;
+// 	height: 100vh;
+// 	background: lighten(desaturate(blue, 30%), 40%);
+// 	animation: sunset 4s ease-in-out 1.5s forwards 1, sunrise 4s ease-in-out 10s forwards 1;
+
+// 	.sun {
+// 		content: '';
+// 		display: block;
+// 		border-radius: 50%;
+// 		background: yellow;
+// 		height: 100px;
+// 		width: 100px;
+// 		position: absolute;
+// 		animation: pm 8s ease-in-out forwards 1, am 8s ease-in-out 8s forwards 1;
+// 	}
+
+// 	.landscape {
+// 		display: block;
+// 		position: absolute;
+// 		bottom: 0;
+// 		left: 0;
+// 		width: 100%;
+// 		height: 250px;
+// 		overflow: hidden;
+
+// 		.hill {
+// 			content: '';
+// 			border-radius: 90% 90% 0 0;
+// 			width: 80%;
+// 			height: 200px;
+// 			background: green;
+// 			position: absolute;
+
+// 			&.foreground {
+// 				bottom: 0px;
+// 				left: -20px;
+// 				z-index: 100;
+// 			}
+// 			&.background {
+// 				background: desaturate(green, 50%);
+// 				width: 70%;
+// 				height: 230px;
+// 				bottom: 0px;
+// 				right: -6px;
+// 				z-index: 50;
+// 			}
+// 		}
+// 	}
+
+// 	@keyframes pm {
+// 		0% {
+// 			top: 0;
+// 			left: 0;
+// 		}
+// 		100% {
+// 			top: 400px;
+// 			left: 50%;
+// 		}
+// 	}
+
+// 	@keyframes am {
+// 		0% {
+// 			top: 400px;
+// 			left: 50%;
+// 		}
+// 		100% {
+// 			top: 0;
+// 			left: 0;
+// 		}
+// 	}
+
+// 	@keyframes sunset {
+// 		75% {
+// 			background: gold;
+// 		}
+// 		80% {
+// 			background: DarkGoldenrod1;
+// 		}
+// 		90% {
+// 			background: orchid4;
+// 		}
+// 		100% {
+// 			background: darken(desaturate(blue, 30%), 40%);
+// 		}
+// 	}
+
+// 	@keyframes stars {
+// 	}
+
+// 	@keyframes sunrise {
+// 		0% {
+// 			background: darken(desaturate(blue, 30%), 40%);
+// 		}
+// 		20% {
+// 			background: orchid4;
+// 		}
+// 		60% {
+// 			background: DarkGoldenrod1;
+// 		}
+// 		70% {
+// 			background: gold;
+// 		}
+// 		100% {
+// 			background: lighten(desaturate(blue, 30%), 40%);
+// 		}
+// 	}
+// }
+
+//---------------------------------
+
+// body {
+// 	background-color: #ccccff;
+// 	margin: 0;
+// 	overflow-y: hidden;
+// 	animation: sky 5.5s 2s forwards;
+// }
+
+// @keyframes sky {
+// 	50% {
+// 		background-color: #ffd700;
+// 	}
+// 	650% {
+// 		background-color: #ffb90f;
+// 	}
+// 	85% {
+// 		background-color: #b39800;
+// 	}
+// 	100% {
+// 		background-color: #68228b;
+// 	}
+// }
+
+// img {
+// 	position: absolute;
+// 	bottom: 0;
+// }
+
+// .sun {
+// 	background-color: #f1c40f;
+// 	width: 100px;
+// 	height: 100px;
+// 	border-radius: 50%;
+// 	position: absolute;
+// 	left: 50%;
+// 	box-shadow: 0 0 20px 5px #ff8c1a;
+// 	animation: sun 10s forwards;
+// }
+
+// @keyframes sun {
+// 	100% {
+// 		transform: translateY(700px);
+// 	}
+// }
+
+// .moon {
+// 	background-color: transparent;
+// 	width: 100px;
+// 	height: 100px;
+// 	border-radius: 50%;
+// 	box-shadow: -20px 10px white;
+// 	position: absolute;
+// 	left: 10%;
+// 	top: 5%;
+// 	opacity: 0;
+// 	animation: night 0.8s 7s forwards;
+// }
+
+// @keyframes night {
+// 	100% {
+// 		opacity: 1;
+// 	}
+// }
