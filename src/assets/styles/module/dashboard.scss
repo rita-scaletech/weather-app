@@ -1,6 +1,5 @@
 .dashboard-wrapper {
-	position: relative;
-	z-index: 1;
+	padding: 40px 0;
 	.title {
 		text-shadow: 1px 1px 1px rgba($black, 0.4);
 	}
@@ -11,6 +10,7 @@
 		width: 380px;
 		max-width: 500px;
 		margin: 50px auto 0;
+		background-color: #ffffffc7;
 		.choose-city-label {
 			margin: 10px auto;
 		}
@@ -36,6 +36,7 @@
 		padding: 20px 10px;
 		width: 600px;
 		margin: 50px auto 0;
+		background-color: #ffffffc7;
 		.weatherCondition {
 			width: calc(100% - 50px);
 			margin: 0 auto;
@@ -44,6 +45,7 @@
 				font-size: $font-size-lg;
 				line-height: 20px;
 			}
+
 			.info-label {
 				color: #53627c;
 			}
@@ -53,6 +55,30 @@
 				height: 20px;
 				margin-right: 5px;
 			}
+			.image-wrapper {
+				animation: fadeInOut 3s infinite;
+				width: 120px;
+				height: 120px;
+				img {
+					width: 100%;
+					height: 100%;
+				}
+			}
+		}
+	}
+
+	@keyframes fadeInOut {
+		0% {
+			transform: translateX(50px);
+			opacity: 0;
+		}
+		50% {
+			transform: translateX(0px);
+			opacity: 1;
+		}
+		100% {
+			transform: translateX(50px);
+			opacity: 0;
 		}
 	}
 }

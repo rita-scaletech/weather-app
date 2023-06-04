@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-const API_KEY = process.env.REACT_APP_API_KEY;
+import { FC, useEffect, useState } from 'react';
 
 import SunImg from 'assets/images/sun.png';
 import Humidity from 'assets/images/hygrometer.png';
@@ -8,21 +7,36 @@ import Pressure from 'assets/images/atmospheric-pressure.png';
 import SmileySun from 'assets/images/smiling-sun.png';
 import SmallSun from 'assets/images/sunny.png';
 import Moon from 'assets/images/moon.png';
+import Spinner from 'shared/components/spinner/spinner';
+import HttpService from 'shared/services/http.service';
+import { weatherConditionMapper } from '../constants/dashboard';
+import { isEmpty } from 'lodash';
 
-const CityWeather = () => {
+const CityWeather: FC = () => {
+	const API_KEY = process.env.REACT_APP_API_KEY;
+
 	const [city, setCity] = useState('');
 	const [weather, setWeather] = useState<Record<string, any>>();
 	const [isCurrentLocation, setIsCurrentLocation] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
+	const [isError, setIsError] = useState(false);
 
 	const fetchWeather = async (event: any) => {
 		event.preventDefault();
-		const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`;
+		setIsLoading(true);
 
-		fetch(apiUrl)
+		HttpService.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`)
 			.then((res) => res.json())
 			.then((data) => {
 				setWeather(data);
 				setIsCurrentLocation(false);
+				setIsLoading(false);
+			})
+			.catch((error) => {
+				console.error(error);
+				setIsLoading(false);
+				setIsError(true);
+				console.log('error', error);
 			});
 	};
 
@@ -35,14 +49,18 @@ const CityWeather = () => {
 	};
 
 	const fetchCurrentLocationWeather = () => {
+		setIsLoading(true);
 		navigator.geolocation.getCurrentPosition(function (position: any) {
-			const apiUrl = `https://fcc-weather-api.glitch.me/api/current?lat=${position.coords.latitude}&lon=${position.coords.longitude}`;
-			fetch(apiUrl)
+			fetch(
+				`https://fcc-weather-api.glitch.me/api/current?lat=${position.coords.latitude}&lon=${position.coords.longitude}`
+			)
 				.then((res) => res.json())
 				.then((data) => {
 					setWeather(data);
 					setIsCurrentLocation(true);
-				});
+					setIsLoading(false);
+				})
+				.catch((error) => console.error(error));
 		});
 	};
 
@@ -57,7 +75,7 @@ const CityWeather = () => {
 	return (
 		<>
 			<i className='ion-ios-sunny' id='sunny'></i>
-			<div className='city-component flex flex flex--column align-items--center border-radius--lg bg--white'>
+			<div className='city-component flex flex flex--column align-items--center border-radius--lg'>
 				<span className='choose-city-label text--black font-size--xxl font--extra-bold'>
 					Find Weather of your city
 				</span>
@@ -66,7 +84,7 @@ const CityWeather = () => {
 					onSubmit={fetchWeather}
 				>
 					<input
-						className='border-radius--lg'
+						className='border-radius--lg bg--transparent'
 						placeholder='City'
 						onChange={(event) => setCity(event.target.value)}
 					/>
@@ -78,9 +96,9 @@ const CityWeather = () => {
 					</button>
 				</form>
 			</div>
-			{weather && (
+			{weather && !isLoading && (
 				<>
-					<div className='weather-info border-radius--lg bg--white text--black'>
+					<div className='weather-info border-radius--lg text--black'>
 						<div className='weatherCondition flex flex--wrap'>
 							<div className='width--50'>
 								<h3>{weather.name}</h3>
@@ -103,11 +121,17 @@ const CityWeather = () => {
 										</p>
 									</div>
 								</div>
-								<img src={SmileySun} className=' width--50' alt='sun-img' />
+								<div className='image-wrapper'>
+									<img
+										src={weatherConditionMapper[weather.weather[0].main]}
+										className=' width--50'
+										alt='sun-img'
+									/>
+								</div>
 							</div>
 						</div>
 					</div>
-					<div className='weather-info border-radius--lg bg--white text--black'>
+					<div className='weather-info border-radius--lg text--black'>
 						<div className='weatherCondition'>
 							<p className='font-size--30 font--semi-bold mb--20'>Details</p>
 							<div className='flex mb--10'>
@@ -140,6 +164,12 @@ const CityWeather = () => {
 					</div>
 				</>
 			)}
+			{isLoading && (
+				<div className='pt--40'>
+					<Spinner />
+				</div>
+			)}
+			{isError && <p>No data Found</p>}
 		</>
 	);
 };
