@@ -1,36 +1,16 @@
 import { FC } from 'react';
-import { useSelector } from 'react-redux';
-import { Route, Routes, Navigate } from 'react-router-dom';
-
-import Login from 'features/auth/container/login';
-import ForgotPassword from 'features/auth/component/forgotPassword';
-import ResetPassword from 'features/auth/component/resetPassword';
-
-import { IState } from 'shared/interface/state';
+import { Route, Routes } from 'react-router-dom';
 import Layout from 'hoc/layout/layout';
 import Dashboard from 'features/dashboard/container/dashboard';
 
 const App: FC = () => {
-	const isLogin: boolean = useSelector((state: IState) => state.auth.isLogin);
-
-	if (isLogin) {
-		return (
-			<Layout>
-				<Routes>
-					<Route path='/' element={<Dashboard />} />
-				</Routes>
-			</Layout>
-		);
-	} else {
-		return (
+	return (
+		<Layout>
 			<Routes>
-				<Route path='/login' element={<Login />} />
-				<Route path='/forgot-password' element={<ForgotPassword />} />
-				<Route path='/reset-password/:token' element={<ResetPassword />} />
-				<Route path='*' element={<Navigate replace to='/login' />} />
+				<Route path='/' element={<Dashboard />} />
 			</Routes>
-		);
-	}
+		</Layout>
+	);
 };
 
 export default App;

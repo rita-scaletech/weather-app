@@ -1,5 +1,5 @@
-import { useState } from 'react';
-const API_KEY = '56a2c31c64a6247e0e851f88799c0dd5';
+import { useEffect, useState } from 'react';
+const API_KEY = process.env.REACT_APP_API_KEY;
 
 import SunImg from 'assets/images/sun.png';
 import Humidity from 'assets/images/hygrometer.png';
@@ -12,18 +12,17 @@ import Moon from 'assets/images/moon.png';
 const CityWeather = () => {
 	const [city, setCity] = useState('');
 	const [weather, setWeather] = useState<Record<string, any>>();
-	console.log('🚀 ~ file: cityWeather.tsx:15 ~ CityWeather ~ weather:', weather);
+	const [isCurrentLocation, setIsCurrentLocation] = useState(false);
 
 	const fetchWeather = async (event: any) => {
 		event.preventDefault();
-		const apiKey = process.env.REACT_APP_API_KEY;
 		const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`;
 
 		fetch(apiUrl)
 			.then((res) => res.json())
 			.then((data) => {
 				setWeather(data);
-				// setCity('');
+				setIsCurrentLocation(false);
 			});
 	};
 
@@ -35,9 +34,25 @@ const CityWeather = () => {
 		return `${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
 	};
 
+	const fetchCurrentLocationWeather = () => {
+		navigator.geolocation.getCurrentPosition(function (position: any) {
+			const apiUrl = `https://fcc-weather-api.glitch.me/api/current?lat=${position.coords.latitude}&lon=${position.coords.longitude}`;
+			fetch(apiUrl)
+				.then((res) => res.json())
+				.then((data) => {
+					setWeather(data);
+					setIsCurrentLocation(true);
+				});
+		});
+	};
+
+	useEffect(() => {
+		fetchCurrentLocationWeather();
+	}, []);
+
 	const sunriseTime = convertUnixTimeToHours(weather && weather.sys.sunrise);
 	const sunsetTime = convertUnixTimeToHours(weather && weather.sys.sunset);
-	const tempInCelsius = weather && Math.round(weather.main.temp - 273.15);
+	const tempInCelsius = weather && (isCurrentLocation ? weather.main.temp : Math.round(weather.main.temp - 273.15));
 
 	return (
 		<>
@@ -76,7 +91,7 @@ const CityWeather = () => {
 							<div className='width--50 flex'>
 								<div className='mr--20 width--50'>
 									<h2 className=''>{tempInCelsius}°C</h2>
-									<p className='info-title'>{weather.weather[0].description}</p>
+									<p className='info-title'>{weather.weather[0].main}</p>
 									<div className='mt--10'>
 										<p className='info-title flex align-items--center'>
 											<img className='small-img' src={SmallSun} alt='SmallSun' />
@@ -97,14 +112,14 @@ const CityWeather = () => {
 							<p className='font-size--30 font--semi-bold mb--20'>Details</p>
 							<div className='flex mb--10'>
 								<p className='info-label'>
-									humidity :{' '}
+									humidity :
 									<span className='text--black mr--10 ml--5'>{weather.main.humidity} %</span>
 								</p>
 								<img src={Humidity} className='small-img' alt='humidity-img' />
 							</div>
 							<div className='flex mb--10'>
 								<p className='info-label'>
-									wind-speed :{' '}
+									wind-speed :
 									<span className='text--black ml--5 mr--10'>{weather.wind.speed} mps</span>
 								</p>
 								<img src={Wind} className='small-img' alt='wind-img' />
@@ -125,16 +140,6 @@ const CityWeather = () => {
 					</div>
 				</>
 			)}
-
-			{/* {weather && (
-				<div className='tvscreen'>
-					<div className='sun'></div>
-					<div className='landscape'>
-						<div className='hill foreground'></div>
-						<div className='hill background'></div>
-					</div>
-				</div>
-			)} */}
 		</>
 	);
 };

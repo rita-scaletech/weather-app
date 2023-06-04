@@ -7,8 +7,8 @@ const Layout: React.FC<PropsWithChildren> = (props) => {
 				{props.children}
 			</div>
 			{/* <div className='sun' />
-					<img src='https://i.postimg.cc/BvNdRH3z/building.png' alt='building' width='100%' />
-				<div className='moon' /> */}
+			<img src='https://i.postimg.cc/BvNdRH3z/building.png' alt='building' width='100%' />
+			<div className='moon' /> */}
 
 			{/* <div className='tvscreen'>
 				<div className='sun' />
