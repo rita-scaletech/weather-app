@@ -8,6 +8,7 @@ import SmallSun from 'assets/images/sunny.png';
 import Moon from 'assets/images/moon.png';
 import Spinner from 'shared/components/spinner/spinner';
 import HttpService from 'shared/services/http.service';
+import { DownTemp, HighTemp } from 'shared/components/icons/icons';
 
 const CityWeather: FC = () => {
 	const API_KEY = process.env.REACT_APP_API_KEY;
@@ -17,8 +18,8 @@ const CityWeather: FC = () => {
 	const [isCurrentLocation, setIsCurrentLocation] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [isError, setIsError] = useState(false);
-
-	console.log('weather', weather);
+	const [hourlyData, setHourlyData] = useState([]);
+	console.log('🚀 ~ file: cityWeather.tsx:22 ~ hourlyData:', hourlyData);
 
 	const fetchWeather = async (event: any) => {
 		event.preventDefault();
@@ -27,6 +28,7 @@ const CityWeather: FC = () => {
 		HttpService.get(`https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${city}&aqi=yes`)
 			.then((data) => {
 				setWeather(data);
+				setHourlyData(data.forecast.forecastday[0].hour);
 				setIsCurrentLocation(false);
 				setIsLoading(false);
 			})
@@ -52,7 +54,6 @@ const CityWeather: FC = () => {
 			fetch(`https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${city}&aqi=yes`)
 				.then((res) => res.json())
 				.then((data) => {
-					console.log('🚀 ~ file: cityWeather.tsx:61 ~ .then ~ data:', data);
 					setWeather(data);
 					setIsCurrentLocation(true);
 					setIsLoading(false);
@@ -103,16 +104,6 @@ const CityWeather: FC = () => {
 								<div className='mr--20 width--50'>
 									<h2 className=''>{weather.current.temp_c}°C</h2>
 									<p className='info-title'>{weather.forecast.forecastday[0].day.condition.text}</p>
-									<div className='mt--10'>
-										<p className='info-title flex align-items--center'>
-											<img className='small-img' src={SmallSun} alt='SmallSun' />
-											{weather.forecast.forecastday[0].astro.sunrise}
-										</p>
-										<p className='info-title flex align-items--center mt--5'>
-											<img className='small-img' src={Moon} alt='moon' />
-											{weather.forecast.forecastday[0].astro.sunset}
-										</p>
-									</div>
 								</div>
 								<div className='image-wrapper'>
 									<img
@@ -125,38 +116,67 @@ const CityWeather: FC = () => {
 						</div>
 					</div>
 					<div className='weather-info border-radius--lg text--black'>
-						<div className='weatherCondition'>
-							<p className='font-size--30 font--semi-bold mb--20'>Details</p>
-							<div className='flex mb--10'>
-								<p className='info-label'>
-									humidity :
-									<span className='text--black mr--10 ml--5'>{weather.current.humidity} %</span>
-								</p>
-								<img src={Humidity} className='small-img' alt='humidity-img' />
+						<p className='font-size--30 font--semi-bold mb--20'>Details</p>
+						<div className='weatherCondition flex justify-content--between'>
+							<div className='width--50'>
+								<div className='flex mb--10'>
+									<p className='info-label'>
+										humidity :
+										<span className='text--black mr--10 ml--5'>{weather.current.humidity} %</span>
+									</p>
+									<img src={Humidity} className='small-img' alt='humidity-img' />
+								</div>
+								<div className='flex mb--10'>
+									<p className='info-label'>
+										wind-speed :
+										<span className='text--black ml--5 mr--10'>
+											{weather.current.condition.wind_kph} kph
+										</span>
+									</p>
+									<img src={Wind} className='small-img' alt='wind-img' />
+								</div>
+								<div className='flex mb--10'>
+									<p className='info-label flex align-items--center'>
+										pressure :
+										<span className='text--black ml--5 mr--10'>
+											{weather.current.condition.pressure_mb} mb
+										</span>
+									</p>
+									<img src={SunImg} className='small-img' alt='SunImg-img' />
+								</div>
+								<div className='flex mb--10'>
+									<p className='info-label flex align-items--center'>
+										Cloud :
+										<span className='text--black mr--10 ml--5'>{weather.current.cloud} %</span>
+									</p>
+									<img src={Pressure} className='small-img' alt='Pressure-img' />
+								</div>
 							</div>
-							<div className='flex mb--10'>
-								<p className='info-label'>
-									wind-speed :
-									<span className='text--black ml--5 mr--10'>
-										{weather.current.condition.wind_kph} kph
-									</span>
-								</p>
-								<img src={Wind} className='small-img' alt='wind-img' />
-							</div>
-							<div className='flex mb--10'>
-								<p className='info-label flex align-items--center'>
-									pressure :
-									<span className='text--black ml--5 mr--10'>
-										{weather.current.condition.pressure_mb} mb
-									</span>
-								</p>
-								<img src={SunImg} className='small-img' alt='SunImg-img' />
-							</div>
-							<div className='flex mb--10'>
-								<p className='info-label flex align-items--center'>
-									Cloud :<span className='text--black mr--10 ml--5'>{weather.current.cloud} %</span>
-								</p>
-								<img src={Pressure} className='small-img' alt='Pressure-img' />
+							<div className='width--50'>
+								<div className='flex'>
+									<p className='info-title flex align-items--center mr--20'>
+										<img className='small-img' src={SmallSun} alt='SmallSun' />
+										{weather.forecast.forecastday[0].astro.sunrise}
+									</p>
+									<p className='info-title flex align-items--center mt--5'>
+										<img className='small-img' src={Moon} alt='moon' />
+										{weather.forecast.forecastday[0].astro.sunset}
+									</p>
+								</div>
+								<div className='flex mt--30'>
+									<p className='info-title flex align-items--center mr--20'>
+										<HighTemp />
+										<span className='text--black'>
+											{weather.forecast.forecastday[0].day.maxtemp_c} °C
+										</span>
+									</p>
+									<p className='info-title flex align-items--center'>
+										<DownTemp />
+										<span className='text--black'>
+											{weather.forecast.forecastday[0].day.mintemp_c} °C
+										</span>
+									</p>
+								</div>
 							</div>
 						</div>
 					</div>
