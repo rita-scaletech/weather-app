@@ -7,7 +7,6 @@ const Dashboard: FC = () => {
 		<div className='dashboard-wrapper'>
 			<h1 className='title text--center'>Weather App</h1>
 			<CityWeather />
-			<DailyForeCast />
 		</div>
 	);
 };

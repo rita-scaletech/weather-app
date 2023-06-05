@@ -9,6 +9,7 @@ import Moon from 'assets/images/moon.png';
 import Spinner from 'shared/components/spinner/spinner';
 import HttpService from 'shared/services/http.service';
 import { DownTemp, HighTemp } from 'shared/components/icons/icons';
+import DailyForeCast from './dailyForeCast';
 
 const CityWeather: FC = () => {
 	const API_KEY = process.env.REACT_APP_API_KEY;
@@ -19,7 +20,6 @@ const CityWeather: FC = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isError, setIsError] = useState(false);
 	const [hourlyData, setHourlyData] = useState([]);
-	console.log('🚀 ~ file: cityWeather.tsx:22 ~ hourlyData:', hourlyData);
 
 	const fetchWeather = async (event: any) => {
 		event.preventDefault();
@@ -40,14 +40,6 @@ const CityWeather: FC = () => {
 			});
 	};
 
-	const convertUnixTimeToHours = (timestamp: number) => {
-		const date = new Date(timestamp * 1000); // Multiply by 1000 to convert from seconds to milliseconds
-		const hours = date.getHours();
-		const minutes = date.getMinutes();
-
-		return `${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
-	};
-
 	const fetchCurrentLocationWeather = () => {
 		setIsLoading(true);
 		navigator.geolocation.getCurrentPosition(function (position: any) {
@@ -55,6 +47,7 @@ const CityWeather: FC = () => {
 				.then((res) => res.json())
 				.then((data) => {
 					setWeather(data);
+					setHourlyData(data.forecast.forecastday[0].hour);
 					setIsCurrentLocation(true);
 					setIsLoading(false);
 				})
@@ -68,7 +61,6 @@ const CityWeather: FC = () => {
 
 	return (
 		<>
-			<i className='ion-ios-sunny' id='sunny'></i>
 			<div className='city-component flex flex flex--column align-items--center border-radius--lg'>
 				<span className='choose-city-label text--black font-size--xxl font--extra-bold'>
 					Find Weather of your city
@@ -188,6 +180,7 @@ const CityWeather: FC = () => {
 				</div>
 			)}
 			{isError && <p>No data Found</p>}
+			{hourlyData && <DailyForeCast hourlyData={hourlyData} />}
 		</>
 	);
 };

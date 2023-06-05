@@ -1,46 +1,80 @@
-import { FC, useEffect, useState } from 'react';
-import HttpService from 'shared/services/http.service';
+import { FC } from 'react';
+import { Line } from 'react-chartjs-2';
+import 'chart.js/auto';
+import 'chartjs-adapter-date-fns';
 
-const DailyForeCast: FC = () => {
-	const API_KEY = process.env.REACT_APP_API_KEY;
-
-	const [isLoading, setIsLoading] = useState(false);
-	const [foreCastData, setForeCastData] = useState({});
-	const [position, setPosition] = useState({
-		latitude: 0,
-		longitude: 0
-	});
-
-	const locationPosition = () => {
-		navigator.geolocation.getCurrentPosition(function (position: any) {
-			const { latitude, longitude } = position.coords;
-			setPosition({
-				latitude,
-				longitude
-			});
-		});
-	};
-	const fetchDailyWeatherData = () => {
-		setIsLoading(true);
-		const { latitude, longitude } = position;
-		if (latitude > 0 && longitude > 0) {
-			// `https://pro.openweathermap.org/data/2.5/forecast/hourly?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`
-			HttpService.get(
-				`https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${'vadodara'}&days=7&aqi=yes&alerts=yes`
-			)
-				.then((data) => {
-					// console.log('🚀 ~ file: dailyForeCast.tsx:32 ~ .then ~ data:', data);
-				})
-				.catch((error) => console.error(error));
+const DailyForeCast: FC<{ hourlyData: any[] }> = ({ hourlyData }) => {
+	const graphOptions = {
+		responsive: true,
+		scales: {
+			x: {
+				type: 'category',
+				grid: {
+					drawBorder: true, // Hide the border of the x-axis grid lines
+					drawOnChartArea: true // Show the x-axis grid lines only between the axes
+				}
+			},
+			y: {
+				beginAtZero: true,
+				grid: {
+					drawBorder: true, // Hide the border of the y-axis grid lines
+					drawOnChartArea: true // Show the y-axis grid lines only between the axes
+				}
+			}
+		},
+		tooltips: {
+			callbacks: {
+				title: (tooltipItem: any) => {
+					console.log('tooltipItem', tooltipItem);
+					// Modify the title of the tooltip
+					// tooltipItem is an array containing tooltip item(s)
+					// For example, if you want to show the date as the tooltip title:
+					return tooltipItem[0].label;
+				},
+				label: (tooltipItem: any) => {
+					// Modify the label(s) of the tooltip
+					// tooltipItem is an object containing tooltip data
+					// For example, if you want to show the temperature as the tooltip label:
+					return 'Temperature: ' + tooltipItem.value;
+				}
+				// You can add more callback functions to customize other tooltip elements
+			}
 		}
 	};
 
-	useEffect(() => {
-		locationPosition();
-		fetchDailyWeatherData();
-	}, [position.latitude, position.longitude]);
+	const getRandomColor = () => {
+		const letters = '0123456789ABCDEF';
+		let color = '#';
+		for (let i = 0; i < 6; i++) {
+			color += letters[Math.floor(Math.random() * 16)];
+		}
+		return color;
+	};
 
-	return <div></div>;
+	const convertedData = hourlyData.map((data) => {
+		const time = data.time.split(' ')[1].substr(0, 2);
+		return {
+			label: time,
+			data: [
+				{ x: time, y: data.temp_c },
+				// { x: time, y: data.temp_f }
+				{ x: time, y: data.wind_mph }
+			],
+			backgroundColor: 'transparent',
+			borderColor: getRandomColor(),
+			borderWidth: 2
+		};
+	});
+	return (
+		<div className='chart-wrapper border-radius--lg'>
+			<Line
+				style={{ width: '100%', height: '300px' }}
+				className='m--0-auto'
+				data={{ datasets: convertedData }}
+				options={graphOptions as any}
+			/>
+		</div>
+	);
 };
 
 export default DailyForeCast;
