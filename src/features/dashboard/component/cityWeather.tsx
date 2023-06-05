@@ -4,12 +4,10 @@ import SunImg from 'assets/images/sun.png';
 import Humidity from 'assets/images/hygrometer.png';
 import Wind from 'assets/images/wind.png';
 import Pressure from 'assets/images/atmospheric-pressure.png';
-import SmileySun from 'assets/images/smiling-sun.png';
 import SmallSun from 'assets/images/sunny.png';
 import Moon from 'assets/images/moon.png';
 import Spinner from 'shared/components/spinner/spinner';
 import HttpService from 'shared/services/http.service';
-import { weatherConditionMapper } from '../constants/dashboard';
 
 const CityWeather: FC = () => {
 	const API_KEY = process.env.REACT_APP_API_KEY;
@@ -20,15 +18,14 @@ const CityWeather: FC = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isError, setIsError] = useState(false);
 
+	console.log('weather', weather);
+
 	const fetchWeather = async (event: any) => {
 		event.preventDefault();
 		setIsLoading(true);
-		//https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}
 
-		HttpService.get(`https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${city}&aqi=yes`)
-			// .then((res) => res.json())
+		HttpService.get(`https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${city}&aqi=yes`)
 			.then((data) => {
-				console.log('🚀 ~ file: cityWeather.tsx:31 ~ .then ~ data:', data);
 				setWeather(data);
 				setIsCurrentLocation(false);
 				setIsLoading(false);
@@ -52,8 +49,7 @@ const CityWeather: FC = () => {
 	const fetchCurrentLocationWeather = () => {
 		setIsLoading(true);
 		navigator.geolocation.getCurrentPosition(function (position: any) {
-			//`https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${city}&lat=${position.coords.latitude}&lon=${position.coords.longitude}`
-			fetch(`https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${city}&aqi=yes`)
+			fetch(`https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${city}&aqi=yes`)
 				.then((res) => res.json())
 				.then((data) => {
 					console.log('🚀 ~ file: cityWeather.tsx:61 ~ .then ~ data:', data);
@@ -68,10 +64,6 @@ const CityWeather: FC = () => {
 	useEffect(() => {
 		fetchCurrentLocationWeather();
 	}, []);
-
-	// const sunriseTime = convertUnixTimeToHours(weather && weather.sys.sunrise);
-	// const sunsetTime = convertUnixTimeToHours(weather && weather.sys.sunset);
-	// const tempInCelsius = weather && (isCurrentLocation ? weather.main.temp : Math.round(weather.main.temp - 273.15));
 
 	return (
 		<>
@@ -99,32 +91,32 @@ const CityWeather: FC = () => {
 			</div>
 			{weather && !isLoading && (
 				<>
-					{/* <div className='weather-info border-radius--lg text--black'>
+					<div className='weather-info border-radius--lg text--black'>
 						<div className='weatherCondition flex flex--wrap'>
 							<div className='width--50'>
-								<h3>{weather.name}</h3>
+								<h3>{weather.location.name}</h3>
 								<p className='info-title'>
-									country: <span className='font--regular'>{weather.sys.country}</span>
+									country: <span className='font--regular'>{weather.location.country}</span>
 								</p>
 							</div>
 							<div className='width--50 flex'>
 								<div className='mr--20 width--50'>
-									<h2 className=''>{tempInCelsius}°C</h2>
-									<p className='info-title'>{weather.weather[0].main}</p>
+									<h2 className=''>{weather.current.temp_c}°C</h2>
+									<p className='info-title'>{weather.forecast.forecastday[0].day.condition.text}</p>
 									<div className='mt--10'>
 										<p className='info-title flex align-items--center'>
 											<img className='small-img' src={SmallSun} alt='SmallSun' />
-											{sunriseTime}
+											{weather.forecast.forecastday[0].astro.sunrise}
 										</p>
 										<p className='info-title flex align-items--center mt--5'>
 											<img className='small-img' src={Moon} alt='moon' />
-											{sunsetTime}
+											{weather.forecast.forecastday[0].astro.sunset}
 										</p>
 									</div>
 								</div>
 								<div className='image-wrapper'>
 									<img
-										src={weatherConditionMapper[weather.weather[0].main]}
+										src={weather.forecast.forecastday[0].day.condition.icon}
 										className=' width--50'
 										alt='sun-img'
 									/>
@@ -138,31 +130,36 @@ const CityWeather: FC = () => {
 							<div className='flex mb--10'>
 								<p className='info-label'>
 									humidity :
-									<span className='text--black mr--10 ml--5'>{weather.main.humidity} %</span>
+									<span className='text--black mr--10 ml--5'>{weather.current.humidity} %</span>
 								</p>
 								<img src={Humidity} className='small-img' alt='humidity-img' />
 							</div>
 							<div className='flex mb--10'>
 								<p className='info-label'>
 									wind-speed :
-									<span className='text--black ml--5 mr--10'>{weather.wind.speed} mps</span>
+									<span className='text--black ml--5 mr--10'>
+										{weather.current.condition.wind_kph} kph
+									</span>
 								</p>
 								<img src={Wind} className='small-img' alt='wind-img' />
 							</div>
 							<div className='flex mb--10'>
 								<p className='info-label flex align-items--center'>
-									visibility : <span className='text--black ml--5 mr--10'>{weather.visibility}</span>
+									pressure :
+									<span className='text--black ml--5 mr--10'>
+										{weather.current.condition.pressure_mb} mb
+									</span>
 								</p>
 								<img src={SunImg} className='small-img' alt='SunImg-img' />
 							</div>
 							<div className='flex mb--10'>
 								<p className='info-label flex align-items--center'>
-									Pressure : <span className='text--black mr--10 ml--5'>{weather.main.pressure}</span>
+									Cloud :<span className='text--black mr--10 ml--5'>{weather.current.cloud} %</span>
 								</p>
 								<img src={Pressure} className='small-img' alt='Pressure-img' />
 							</div>
 						</div>
-					</div> */}
+					</div>
 				</>
 			)}
 			{isLoading && (
