@@ -10,12 +10,11 @@ import Moon from 'assets/images/moon.png';
 import Spinner from 'shared/components/spinner/spinner';
 import HttpService from 'shared/services/http.service';
 import { weatherConditionMapper } from '../constants/dashboard';
-import { isEmpty } from 'lodash';
 
 const CityWeather: FC = () => {
 	const API_KEY = process.env.REACT_APP_API_KEY;
 
-	const [city, setCity] = useState('');
+	const [city, setCity] = useState('Ahmedabad');
 	const [weather, setWeather] = useState<Record<string, any>>();
 	const [isCurrentLocation, setIsCurrentLocation] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
@@ -24,10 +23,12 @@ const CityWeather: FC = () => {
 	const fetchWeather = async (event: any) => {
 		event.preventDefault();
 		setIsLoading(true);
+		//https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}
 
-		HttpService.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`)
-			.then((res) => res.json())
+		HttpService.get(`https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${city}&aqi=yes`)
+			// .then((res) => res.json())
 			.then((data) => {
+				console.log('🚀 ~ file: cityWeather.tsx:31 ~ .then ~ data:', data);
 				setWeather(data);
 				setIsCurrentLocation(false);
 				setIsLoading(false);
@@ -51,11 +52,11 @@ const CityWeather: FC = () => {
 	const fetchCurrentLocationWeather = () => {
 		setIsLoading(true);
 		navigator.geolocation.getCurrentPosition(function (position: any) {
-			fetch(
-				`https://fcc-weather-api.glitch.me/api/current?lat=${position.coords.latitude}&lon=${position.coords.longitude}`
-			)
+			//`https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${city}&lat=${position.coords.latitude}&lon=${position.coords.longitude}`
+			fetch(`https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${city}&aqi=yes`)
 				.then((res) => res.json())
 				.then((data) => {
+					console.log('🚀 ~ file: cityWeather.tsx:61 ~ .then ~ data:', data);
 					setWeather(data);
 					setIsCurrentLocation(true);
 					setIsLoading(false);
@@ -68,9 +69,9 @@ const CityWeather: FC = () => {
 		fetchCurrentLocationWeather();
 	}, []);
 
-	const sunriseTime = convertUnixTimeToHours(weather && weather.sys.sunrise);
-	const sunsetTime = convertUnixTimeToHours(weather && weather.sys.sunset);
-	const tempInCelsius = weather && (isCurrentLocation ? weather.main.temp : Math.round(weather.main.temp - 273.15));
+	// const sunriseTime = convertUnixTimeToHours(weather && weather.sys.sunrise);
+	// const sunsetTime = convertUnixTimeToHours(weather && weather.sys.sunset);
+	// const tempInCelsius = weather && (isCurrentLocation ? weather.main.temp : Math.round(weather.main.temp - 273.15));
 
 	return (
 		<>
@@ -98,7 +99,7 @@ const CityWeather: FC = () => {
 			</div>
 			{weather && !isLoading && (
 				<>
-					<div className='weather-info border-radius--lg text--black'>
+					{/* <div className='weather-info border-radius--lg text--black'>
 						<div className='weatherCondition flex flex--wrap'>
 							<div className='width--50'>
 								<h3>{weather.name}</h3>
@@ -161,7 +162,7 @@ const CityWeather: FC = () => {
 								<img src={Pressure} className='small-img' alt='Pressure-img' />
 							</div>
 						</div>
-					</div>
+					</div> */}
 				</>
 			)}
 			{isLoading && (

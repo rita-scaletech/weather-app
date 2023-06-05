@@ -12,7 +12,6 @@
 body {
 	@include margin(0);
 	@include padding(0);
-	// background-color: #337ab7;
 	font-size: $font-size-browser-default;
 	font-weight: $font-regular;
 	color: $white;
@@ -22,6 +21,7 @@ body {
 	background-position: center;
 	background-size: cover;
 	background-repeat: no-repeat;
+	height: 100vh;
 }
 
 ::-webkit-scrollbar {

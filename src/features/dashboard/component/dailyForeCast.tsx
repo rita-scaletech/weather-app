@@ -24,12 +24,12 @@ const DailyForeCast: FC = () => {
 		setIsLoading(true);
 		const { latitude, longitude } = position;
 		if (latitude > 0 && longitude > 0) {
+			// `https://pro.openweathermap.org/data/2.5/forecast/hourly?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`
 			HttpService.get(
-				`https://pro.openweathermap.org/data/2.5/forecast/hourly?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`
+				`https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${'vadodara'}&days=7&aqi=yes&alerts=yes`
 			)
-				.then((res) => res.json())
 				.then((data) => {
-					console.log('🚀 ~ file: dailyForeCast.tsx:32 ~ .then ~ data:', data);
+					// console.log('🚀 ~ file: dailyForeCast.tsx:32 ~ .then ~ data:', data);
 				})
 				.catch((error) => console.error(error));
 		}

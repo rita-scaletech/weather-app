@@ -1,9 +1,9 @@
 {
-	"name": "base-frontend-x",
+	"name": "weather-app",
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"start": "react-scripts start",
+		"start": "BROWSER=none react-scripts start",
 		"build": "react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
