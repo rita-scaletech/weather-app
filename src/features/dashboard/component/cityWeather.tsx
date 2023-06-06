@@ -16,8 +16,6 @@ import SmileySun from 'assets/images/smiling-sun.png';
 
 const CityWeather: FC = () => {
 	const API_KEY = process.env.REACT_APP_API_KEY;
-	console.log('window.cu', navigator.geolocation);
-
 	const [city, setCity] = useState('Ahmedabad');
 	const [weather, setWeather] = useState<Record<string, any>>();
 	const [isLoading, setIsLoading] = useState(false);
@@ -64,6 +62,7 @@ const CityWeather: FC = () => {
 							onChange={(event) => setCity(event.target.value)}
 						/>
 						<button
+							disabled={isError}
 							className='submit-btn border-radius--lg bg--black text--white font--bold cursor--pointer'
 							type='submit'
 						>
@@ -72,7 +71,7 @@ const CityWeather: FC = () => {
 					</form>
 				</div>
 			</div>
-			{weather && !isLoading && (
+			{weather && !isLoading && !isError && (
 				<div className='weather-details-wrapper flex'>
 					<div className='weather-info border-radius--lg text--black'>
 						<div className='weatherCondition flex flex--wrap flex--column'>
@@ -168,13 +167,13 @@ const CityWeather: FC = () => {
 					</div>
 				</div>
 			)}
-			{hourlyData.length > 0 && !isLoading && <DailyForeCast hourlyData={hourlyData} />}
-			{isLoading && (
+			{hourlyData.length > 0 && !isError && !isLoading && <DailyForeCast hourlyData={hourlyData} />}
+			{isLoading && !isError && (
 				<div className='pt--40'>
 					<Spinner />
 				</div>
 			)}
-			{isError && <p>No data Found</p>}
+			{isError && <p className='text--center pt--20'>No data Found</p>}
 		</>
 	);
 };
