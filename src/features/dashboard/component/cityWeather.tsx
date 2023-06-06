@@ -91,7 +91,7 @@ const CityWeather: FC = () => {
 									/>
 								</div>
 								<div className='width--50'>
-									<h1 className='font-size--50'>{weather.current.temp_c}°C</h1>
+									<h1 className='font-size--60'>{weather.current.temp_c}°C</h1>
 									<p className='info-title'>{weather.forecast.forecastday[0].day.condition.text}</p>
 								</div>
 							</div>
@@ -101,14 +101,14 @@ const CityWeather: FC = () => {
 						<p className='font-size--30 font--semi-bold mb--20 pl--20 pr--20'>Current Weather</p>
 						<div className='weatherCondition flex justify-content--between'>
 							<div className='width--50'>
-								<div className='flex mb--10'>
+								<div className='flex mb--20'>
 									<p className='info-label'>
 										humidity :
 										<span className='text--black mr--10 ml--5'>{weather.current.humidity} %</span>
 									</p>
 									<img src={Humidity} className='small-img' alt='humidity-img' />
 								</div>
-								<div className='flex mb--10'>
+								<div className='flex mb--20'>
 									<p className='info-label'>
 										wind-speed :
 										<span className='text--black ml--5 mr--10'>
@@ -117,7 +117,7 @@ const CityWeather: FC = () => {
 									</p>
 									<img src={Wind} className='small-img' alt='wind-img' />
 								</div>
-								<div className='flex mb--10'>
+								<div className='flex mb--20'>
 									<p className='info-label flex align-items--center'>
 										pressure :
 										<span className='text--black ml--5 mr--10'>
@@ -126,7 +126,7 @@ const CityWeather: FC = () => {
 									</p>
 									<img src={SunImg} className='small-img' alt='SunImg-img' />
 								</div>
-								<div className='flex mb--10'>
+								<div className='flex mb--20'>
 									<p className='info-label flex align-items--center'>
 										Cloud :
 										<span className='text--black mr--10 ml--5'>{weather.current.cloud} %</span>
@@ -135,15 +135,19 @@ const CityWeather: FC = () => {
 								</div>
 							</div>
 							<div className='width--50'>
-								<div className='flex'>
-									<p className='info-title flex align-items--center mr--10'>
-										<img className='small-img' src={SmallSun} alt='SmallSun' />
-										{weather.forecast.forecastday[0].astro.sunrise}
-									</p>
-									<p className='info-title flex align-items--center'>
-										<img className='small-img' src={Moon} alt='moon' />
-										{weather.forecast.forecastday[0].astro.sunset}
-									</p>
+								<div className='flex justify-content--between'>
+									<div className='mr--10'>
+										<img className='sun-position-img' src={SmallSun} alt='SmallSun' />
+										<p className='info-title mt--5'>
+											{weather.forecast.forecastday[0].astro.sunrise}
+										</p>
+									</div>
+									<div className='info-title'>
+										<img className='sun-position-img' src={Moon} alt='moon' />
+										<p className='info-title mt--5'>
+											{weather.forecast.forecastday[0].astro.sunset}
+										</p>
+									</div>
 								</div>
 								<div className='flex mt--30'>
 									<p className='info-title flex align-items--center mr--20'>

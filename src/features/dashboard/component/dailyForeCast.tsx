@@ -81,7 +81,7 @@ const DailyForeCast: FC<{ hourlyData: IHourlyData[] }> = ({ hourlyData }) => {
 	return (
 		<div className='chart-wrapper border-radius--lg'>
 			<Line
-				style={{ width: '800', height: '400px' }}
+				style={{ width: '850', height: '400px' }}
 				className='m--0-auto'
 				data={finalData}
 				options={graphOptions}
