@@ -1,22 +1,23 @@
 import { FC, useEffect, useState } from 'react';
 
+import Spinner from 'shared/components/spinner/spinner';
+import HttpService from 'shared/services/http.service';
+import { DownTemp, HighTemp } from 'shared/components/icons/icons';
+
+import DailyForeCast from './dailyForeCast';
+
 import SunImg from 'assets/images/sun.png';
 import Humidity from 'assets/images/hygrometer.png';
 import Wind from 'assets/images/wind.png';
 import Pressure from 'assets/images/atmospheric-pressure.png';
 import SmallSun from 'assets/images/sunny.png';
 import Moon from 'assets/images/moon.png';
-import Spinner from 'shared/components/spinner/spinner';
-import HttpService from 'shared/services/http.service';
-import { DownTemp, HighTemp } from 'shared/components/icons/icons';
-import DailyForeCast from './dailyForeCast';
 
 const CityWeather: FC = () => {
 	const API_KEY = process.env.REACT_APP_API_KEY;
 
 	const [city, setCity] = useState('Ahmedabad');
 	const [weather, setWeather] = useState<Record<string, any>>();
-	const [isCurrentLocation, setIsCurrentLocation] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [isError, setIsError] = useState(false);
 	const [hourlyData, setHourlyData] = useState([]);
@@ -29,7 +30,6 @@ const CityWeather: FC = () => {
 			.then((data) => {
 				setWeather(data);
 				setHourlyData(data.forecast.forecastday[0].hour);
-				setIsCurrentLocation(false);
 				setIsLoading(false);
 			})
 			.catch((error) => {
@@ -42,17 +42,14 @@ const CityWeather: FC = () => {
 
 	const fetchCurrentLocationWeather = () => {
 		setIsLoading(true);
-		navigator.geolocation.getCurrentPosition(function (position: any) {
-			fetch(`https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${city}&aqi=yes`)
-				.then((res) => res.json())
-				.then((data) => {
-					setWeather(data);
-					setHourlyData(data.forecast.forecastday[0].hour);
-					setIsCurrentLocation(true);
-					setIsLoading(false);
-				})
-				.catch((error) => console.error(error));
-		});
+		fetch(`https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${city}&aqi=yes`)
+			.then((res) => res.json())
+			.then((data) => {
+				setWeather(data);
+				setHourlyData(data.forecast.forecastday[0].hour);
+				setIsLoading(false);
+			})
+			.catch((error) => console.error(error));
 	};
 
 	useEffect(() => {
@@ -150,7 +147,7 @@ const CityWeather: FC = () => {
 										<img className='small-img' src={SmallSun} alt='SmallSun' />
 										{weather.forecast.forecastday[0].astro.sunrise}
 									</p>
-									<p className='info-title flex align-items--center mt--5'>
+									<p className='info-title flex align-items--center'>
 										<img className='small-img' src={Moon} alt='moon' />
 										{weather.forecast.forecastday[0].astro.sunset}
 									</p>
@@ -180,7 +177,7 @@ const CityWeather: FC = () => {
 				</div>
 			)}
 			{isError && <p>No data Found</p>}
-			{hourlyData && <DailyForeCast hourlyData={hourlyData} />}
+			{hourlyData.length > 0 && <DailyForeCast hourlyData={hourlyData} />}
 		</>
 	);
 };

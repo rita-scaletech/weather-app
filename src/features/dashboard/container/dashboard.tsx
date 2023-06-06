@@ -1,6 +1,5 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import CityWeather from '../component/cityWeather';
-import DailyForeCast from '../component/dailyForeCast';
 
 const Dashboard: FC = () => {
 	return (
