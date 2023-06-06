@@ -12,9 +12,11 @@ import Wind from 'assets/images/wind.png';
 import Pressure from 'assets/images/atmospheric-pressure.png';
 import SmallSun from 'assets/images/sunny.png';
 import Moon from 'assets/images/moon.png';
+import SmileySun from 'assets/images/smiling-sun.png';
 
 const CityWeather: FC = () => {
 	const API_KEY = process.env.REACT_APP_API_KEY;
+	console.log('window.cu', navigator.geolocation);
 
 	const [city, setCity] = useState('Ahmedabad');
 	const [weather, setWeather] = useState<Record<string, any>>();
@@ -22,8 +24,8 @@ const CityWeather: FC = () => {
 	const [isError, setIsError] = useState(false);
 	const [hourlyData, setHourlyData] = useState([]);
 
-	const fetchWeather = async (event: any) => {
-		event.preventDefault();
+	const fetchWeather = (event?: any) => {
+		event && event.preventDefault();
 		setIsLoading(true);
 
 		HttpService.get(`https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${city}&aqi=yes`)
@@ -40,72 +42,63 @@ const CityWeather: FC = () => {
 			});
 	};
 
-	const fetchCurrentLocationWeather = () => {
-		setIsLoading(true);
-		fetch(`https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${city}&aqi=yes`)
-			.then((res) => res.json())
-			.then((data) => {
-				setWeather(data);
-				setHourlyData(data.forecast.forecastday[0].hour);
-				setIsLoading(false);
-			})
-			.catch((error) => console.error(error));
-	};
-
 	useEffect(() => {
-		fetchCurrentLocationWeather();
+		fetchWeather();
 	}, []);
 
 	return (
 		<>
-			<div className='city-component flex flex flex--column align-items--center border-radius--lg'>
-				<span className='choose-city-label text--black font-size--xxl font--extra-bold'>
-					Find Weather of your city
-				</span>
-				<form
-					className='search-box text--black font-size--lg font--semi-bold border-radius--lg'
-					onSubmit={fetchWeather}
-				>
-					<input
-						className='border-radius--lg bg--transparent'
-						placeholder='City'
-						onChange={(event) => setCity(event.target.value)}
-					/>
-					<button
-						className='submit-btn border-radius--lg bg--black text--white font--bold cursor--pointer'
-						type='submit'
+			<div className='header-wrapper flex justify-content--between align-items--center'>
+				<div className='flex align-items--center'>
+					<h1 className='title text--center text--black'>Forecast</h1>
+					<img src={SmileySun} className='ml--10' alt='sun-img' />
+				</div>
+				<div className='flex flex--column'>
+					<form
+						className='search-box text--black font-size--lg font--semi-bold border-radius--lg'
+						onSubmit={fetchWeather}
 					>
-						Search
-					</button>
-				</form>
+						<input
+							className='border-radius--lg bg--transparent'
+							placeholder='City'
+							onChange={(event) => setCity(event.target.value)}
+						/>
+						<button
+							className='submit-btn border-radius--lg bg--black text--white font--bold cursor--pointer'
+							type='submit'
+						>
+							Search
+						</button>
+					</form>
+				</div>
 			</div>
 			{weather && !isLoading && (
-				<>
+				<div className='weather-details-wrapper flex'>
 					<div className='weather-info border-radius--lg text--black'>
-						<div className='weatherCondition flex flex--wrap'>
-							<div className='width--50'>
+						<div className='weatherCondition flex flex--wrap flex--column'>
+							<div>
 								<h3>{weather.location.name}</h3>
 								<p className='info-title'>
 									country: <span className='font--regular'>{weather.location.country}</span>
 								</p>
 							</div>
-							<div className='width--50 flex'>
-								<div className='mr--20 width--50'>
-									<h2 className=''>{weather.current.temp_c}°C</h2>
-									<p className='info-title'>{weather.forecast.forecastday[0].day.condition.text}</p>
-								</div>
-								<div className='image-wrapper'>
+							<div className='flex justify-content--between'>
+								<div className='image-wrapper width--50'>
 									<img
 										src={weather.forecast.forecastday[0].day.condition.icon}
-										className=' width--50'
+										className='width--50'
 										alt='sun-img'
 									/>
+								</div>
+								<div className='width--50'>
+									<h1 className='font-size--50'>{weather.current.temp_c}°C</h1>
+									<p className='info-title'>{weather.forecast.forecastday[0].day.condition.text}</p>
 								</div>
 							</div>
 						</div>
 					</div>
 					<div className='weather-info border-radius--lg text--black'>
-						<p className='font-size--30 font--semi-bold mb--20'>Details</p>
+						<p className='font-size--30 font--semi-bold mb--20 pl--20 pr--20'>Current Weather</p>
 						<div className='weatherCondition flex justify-content--between'>
 							<div className='width--50'>
 								<div className='flex mb--10'>
@@ -143,7 +136,7 @@ const CityWeather: FC = () => {
 							</div>
 							<div className='width--50'>
 								<div className='flex'>
-									<p className='info-title flex align-items--center mr--20'>
+									<p className='info-title flex align-items--center mr--10'>
 										<img className='small-img' src={SmallSun} alt='SmallSun' />
 										{weather.forecast.forecastday[0].astro.sunrise}
 									</p>
@@ -169,15 +162,15 @@ const CityWeather: FC = () => {
 							</div>
 						</div>
 					</div>
-				</>
+				</div>
 			)}
+			{hourlyData.length > 0 && !isLoading && <DailyForeCast hourlyData={hourlyData} />}
 			{isLoading && (
 				<div className='pt--40'>
 					<Spinner />
 				</div>
 			)}
 			{isError && <p>No data Found</p>}
-			{hourlyData.length > 0 && <DailyForeCast hourlyData={hourlyData} />}
 		</>
 	);
 };

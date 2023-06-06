@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Line } from 'react-chartjs-2';
 import 'chart.js/auto';
-import { AirQuality, IHourlyData } from '../interface/dashboard.interface';
+import { IHourlyData } from '../interface/dashboard.interface';
 
 const DailyForeCast: FC<{ hourlyData: IHourlyData[] }> = ({ hourlyData }) => {
 	const graphOptions: Record<string, any> = {
