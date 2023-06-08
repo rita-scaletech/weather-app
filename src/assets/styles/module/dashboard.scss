@@ -3,6 +3,13 @@
 		text-shadow: 1px 1px 1px rgba($black, 0.4);
 	}
 
+	.dashboard-bg {
+		background-position: center;
+		background-size: cover;
+		background-repeat: no-repeat;
+		height: 100%;
+	}
+
 	.header-wrapper {
 		box-shadow: 0 3px 6px 0 #555;
 		padding: 10px;

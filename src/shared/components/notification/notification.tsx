@@ -7,7 +7,7 @@ const Notification: React.FC = () => {
 	return (
 		<ToastContainer
 			position='bottom-right'
-			autoClose={4000}
+			autoClose={500}
 			hideProgressBar
 			newestOnTop={false}
 			closeOnClick

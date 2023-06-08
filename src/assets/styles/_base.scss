@@ -17,11 +17,11 @@ body {
 	color: $white;
 	scroll-behavior: smooth;
 	overflow-x: hidden;
-	background-image: url('../images/Weather-Background.jpg');
+	// background-image: url('../images/Weather-Background.jpg');
 	background-position: center;
 	background-size: cover;
 	background-repeat: no-repeat;
-	height: 100vh;
+	height: 100%;
 }
 
 ::-webkit-scrollbar {

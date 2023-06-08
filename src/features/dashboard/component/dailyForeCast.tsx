@@ -2,8 +2,15 @@ import { FC } from 'react';
 import { Line } from 'react-chartjs-2';
 import 'chart.js/auto';
 import { IHourlyData } from '../interface/dashboard.interface';
+import Spinner from 'shared/components/spinner/spinner';
 
-const DailyForeCast: FC<{ hourlyData: IHourlyData[] }> = ({ hourlyData }) => {
+interface IDailyProps {
+	isLoading: boolean;
+	isError: boolean;
+	hourlyData: IHourlyData[];
+}
+
+const DailyForeCast: FC<IDailyProps> = ({ hourlyData, isLoading, isError }) => {
 	const graphOptions: Record<string, any> = {
 		responsive: true,
 		plugins: {
@@ -80,12 +87,19 @@ const DailyForeCast: FC<{ hourlyData: IHourlyData[] }> = ({ hourlyData }) => {
 	};
 	return (
 		<div className='chart-wrapper border-radius--lg'>
-			<Line
-				style={{ width: '850', height: '400px' }}
-				className='m--0-auto'
-				data={finalData}
-				options={graphOptions}
-			/>
+			{hourlyData.length > 0 && (
+				<Line
+					style={{ width: '850', height: '400px' }}
+					className='m--0-auto'
+					data={finalData}
+					options={graphOptions}
+				/>
+			)}
+			{isLoading && !isError && (
+				<div className='pt--40'>
+					<Spinner />
+				</div>
+			)}
 		</div>
 	);
 };
