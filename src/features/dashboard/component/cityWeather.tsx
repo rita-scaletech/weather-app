@@ -16,7 +16,7 @@ import SmileySun from 'assets/images/smiling-sun.png';
 
 const CityWeather: FC = () => {
 	const API_KEY = process.env.REACT_APP_API_KEY;
-	const [city, setCity] = useState('Ahmedabad');
+	const [city, setCity] = useState('');
 	const [weather, setWeather] = useState<Record<string, any>>();
 	const [isLoading, setIsLoading] = useState(false);
 	const [isError, setIsError] = useState(false);
@@ -40,8 +40,29 @@ const CityWeather: FC = () => {
 			});
 	};
 
+	const fetchCurrentWeather = () => {
+		setIsLoading(true);
+		navigator.geolocation.getCurrentPosition(function (position: any) {
+			HttpService.get(
+				`https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${position.coords.latitude},${position.coords.longitude}
+				&aqi=yes`
+			)
+				.then((data) => {
+					setWeather(data);
+					setHourlyData(data.forecast.forecastday[0].hour);
+					setIsLoading(false);
+				})
+				.catch((error) => {
+					console.error(error);
+					setIsLoading(false);
+					setIsError(true);
+					console.log('error', error);
+				});
+		});
+	};
+
 	useEffect(() => {
-		fetchWeather();
+		fetchCurrentWeather();
 	}, []);
 
 	return (
