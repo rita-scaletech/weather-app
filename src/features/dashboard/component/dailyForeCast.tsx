@@ -72,8 +72,8 @@ const DailyForeCast: FC<IDailyProps> = ({ hourlyData, isLoading, isError }) => {
 			{
 				label: 'Humidity',
 				data: humidityDataset,
-				backgroundColor: 'Pink',
-				borderColor: 'Pink',
+				backgroundColor: 'green',
+				borderColor: 'green',
 				borderWidth: 2
 			},
 			{
@@ -96,7 +96,7 @@ const DailyForeCast: FC<IDailyProps> = ({ hourlyData, isLoading, isError }) => {
 				/>
 			)}
 			{isLoading && !isError && (
-				<div className='pt--40'>
+				<div className='display-flex-center height--full'>
 					<Spinner />
 				</div>
 			)}

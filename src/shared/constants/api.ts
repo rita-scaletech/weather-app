@@ -6,7 +6,9 @@ export const API_CONFIG = {
 	path: {
 		login: 'login',
 		forget: 'password/forgot',
-		reset: 'password/reset'
+		reset: 'password/reset',
+		forecast: 'forecast.json',
+		search: 'search.json'
 	}
 };
 

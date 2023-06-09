@@ -1,4 +1,10 @@
-@media screen and (max-width: 1600px) {
+@media screen and (max-height: 900px) {
+	.dashboard-wrapper {
+		.dashboard-bg {
+			height: 100% !important;
+			padding-bottom: 100px;
+		}
+	}
 }
 
 @media screen and (max-width: 1440px) {
@@ -89,6 +95,7 @@
 		display: block;
 	}
 }
+
 @media screen and (max-width: 768px) {
 	.show--md {
 		display: none;
@@ -108,6 +115,7 @@
 		display: block;
 	}
 }
+
 @media screen and (max-width: 425px) {
 	.show--xs {
 		display: none;
